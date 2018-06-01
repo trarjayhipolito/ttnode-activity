@@ -2,14 +2,15 @@ var logger = require('winston')
 const TAG = 'GET_all_user - '
 
 exports.GET_all_user = function(req, res, _dbConnection){
+    //initialize database connection
     dbConnection = _dbConnection;
+
+    //initialize response
     var resp;
 
-    var params  = {
-        userId: req.params.userId
-    };
-
-    getAllUser(params, function(err, allUser){
+    //Call get ALL user fn
+    getAllUser(function(err, allUser){
+        //check the server
         if (err){
             let err = {}
             err.status = '500'
@@ -17,43 +18,49 @@ exports.GET_all_user = function(req, res, _dbConnection){
             res.send(err)
         }
 
-         if (allUser.length !== 0) {
+        //check if there's fetched data
+        if (allUser.length !== 0) {
             resp = {status: "200", allUser: allUser};
         } else {
             resp = {status: "204", message: "No Data Available!"};
         }
 
+        //send response
         res.send(resp);
 
     });
 
 };
 
-function getAllUser(params, callback) {
-
-    var userId = params.userId;
-
+//getAllUser fn
+//-------------
+function getAllUser(callback) {
+    //sql command
     var sql = 'SELECT * FROM user_tbl';
-
-    var values = [userId];
-
      //executing sql
-     dbConnection.query(sql, values, function(err, recordset){
+    dbConnection.query(sql, function(err, recordset){
+        //check error on fetching
         if (err) {
             logger.log('error', TAG + 'getallUsers Err : ' + err);
             callback(err, null);
         }
+        //initialize user list array
         var allUserList = [];
-        for (var index in recordset){
 
+        //loop for each record in user table
+        for (var index in recordset){
+            //save each record in object
             var allUser = {
                 user_id: recordset[index].user_id,
                 user_name: recordset[index].user_name,
                 user_auth: recordset[index].user_auth,
             };
+            //push record in array
             allUserList.push(allUser);
         }
-        
-        callback(null,allUserList);
+
+        //returns User list
+        callback(null, allUserList);
     });
 }
+//------------
