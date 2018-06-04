@@ -36,7 +36,7 @@ exports.GET_all_user = function(req, res, _dbConnection){
 //-------------
 function getAllUser(callback) {
     //sql command
-    var sql = 'SELECT * FROM user_tbl';
+    var sql = 'SELECT * FROM user_tbl WHERE user_isdel = 0';
      //executing sql
     dbConnection.query(sql, function(err, recordset){
         //check error on fetching

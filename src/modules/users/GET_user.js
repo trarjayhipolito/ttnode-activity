@@ -46,7 +46,7 @@ function getUser(params, callback) {
     var userId = params.userId;
 
     //sql command
-    var sql = 'SELECT * FROM user_tbl WHERE user_id=' + userId;
+    var sql = 'SELECT * FROM user_tbl WHERE user_isdel = 0 AND user_id = ' + userId;
 
      //executing sql
      dbConnection.query(sql, function(err, recordset){
@@ -64,8 +64,9 @@ function getUser(params, callback) {
             //save record
             userRes = {
                 user_id: recordset[0].user_id,
-                user_name: recordset[0].user_name,
-                user_auth: recordset[0].user_auth,
+                user_fname: recordset[0].user_fname,
+                user_lname: recordset[0].user_lname,
+                user_isdel: recordset[0].user_isdel
             };
         }
         

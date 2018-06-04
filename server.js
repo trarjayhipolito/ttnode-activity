@@ -1,14 +1,20 @@
 const express = require('express');
 const server = express();
 const bodyParser = require('body-parser');
+const swaggerUi = require('swagger-ui-express');
+
+const mySampleProject = require('./sample.json');
 var connection = require('./src/config/db-mysql')
+var swagger = require('swagger-node-express')
 
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: true}));
 
-server.get('/', (req, res) => {
-    return res.send('Hello World!');
-});
+// Set swagger to server application
+swagger.setAppHandler(server);
+
+server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(mySampleProject));
+
 
 connection.init(function (conn) {
     /**
