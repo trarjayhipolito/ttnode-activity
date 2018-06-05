@@ -6,6 +6,7 @@ const swaggerUi = require('swagger-ui-express');
 const mySampleProject = require('./sample.json');
 var connection = require('./src/config/db-mysql')
 var swagger = require('swagger-node-express')
+var winston = require('winston')
 
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: true}));
@@ -15,6 +16,29 @@ swagger.setAppHandler(server);
 
 server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(mySampleProject));
 
+// initializing application logger
+var logLevel = process.env.LOG_LEVEL || 'debug' // debug will be the default if not specified
+var winstonTransports = []
+var deploymentEnv = process.env.ENV || 'local'
+
+// only add the daily log rotation if deployed on a server
+if (deploymentEnv !== 'local') {
+  var transportDailyRotation = new winston.transports.DailyRotateFile({
+    filename: './logs/tt-node-activity',
+    datePattern: '_yyyy-MM-dd.log',
+    prepend: false,
+    level: logLevel
+  })
+  winstonTransports.push(transportDailyRotation)
+} else {
+  // console log if ENV is local.
+  winstonTransports.push(new (winston.transports.Console)({ colorize: true }))
+}
+
+winston.configure({
+  level: logLevel,
+  transports: winstonTransports
+})
 
 connection.init(function (conn) {
     /**
