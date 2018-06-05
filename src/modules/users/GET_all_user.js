@@ -52,8 +52,8 @@ function getAllUser(callback) {
             //save each record in object
             var allUser = {
                 user_id: recordset[index].user_id,
-                user_name: recordset[index].user_name,
-                user_auth: recordset[index].user_auth,
+                user_fname: recordset[index].user_fname,
+                user_lname: recordset[index].user_fname,
             };
             //push record in array
             allUserList.push(allUser);

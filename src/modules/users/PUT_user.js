@@ -26,8 +26,6 @@ function updateUser (req, res, _dbConnection, next) {
   //add user_fname if not empty
   if (body.user_fname) {
 
-    //
-
     sqlQuery += ` user_fname = ?`
     sqlData.push(body.user_fname)
 
@@ -51,6 +49,7 @@ function updateUser (req, res, _dbConnection, next) {
   }
 
   //add user_isdel if not empty
+  //is user_isdel is one, delete.
   if (body.user_isdel) {
     sqlQuery += ` user_isdel = ? `
     sqlData.push(body.user_isdel)

@@ -37,6 +37,7 @@ module.exports.init = function init (server, dbConnection) {
     server.post('/api/user', function (req, res) {
         if (dbConnection.state === 'authenticated') {
             POST_user.POST_user(req, res, dbConnection)
+            logger.log('info', 'done with POST_user.POST_user')
         } else {
             DbConnectionError.DbConnectionError(req, res)
         }
@@ -48,6 +49,7 @@ module.exports.init = function init (server, dbConnection) {
     server.put('/api/user', function (req, res, next) {
         if (dbConnection.state === 'authenticated') {
           PUT_user.PUT_user(req, res, dbConnection, next)
+          logger.log('info', 'done with PUT_user.PUT_user')
         } else {
           DbConnectionError.DbConnectionError(req, res)
         }
